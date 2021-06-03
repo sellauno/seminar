@@ -1,11 +1,14 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:seminar/loginpage.dart';
-import 'package:seminar/home.dart';
-import 'entryform.dart';
-import 'entryseminar.dart';
-import 'pesanan.dart';
+import 'package:seminar/login/loginpage.dart';
+import 'package:seminar/pages/home.dart';
+import 'form/entryform.dart';
+import 'form/entryseminar.dart';
+import 'pages/pesananpage.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -24,9 +27,11 @@ class MyApp extends StatelessWidget {
         // '/register': (context) => RegisterEmailSection(),
         // '/signin': (context) => EmailPasswordForm(),
         // '/firstScreen': (context) => FirstScreen(),
+        '/seminar': (context) => HomePage(),
+        '/login': (context) => LoginPage(),
         '/pesanan': (context) => PesananPage(),
-        '/formseminar': (context) => EntryForm(),        
-        '/formpesanan': (context) => EntryFormSeminar(),
+        '/formseminar': (context) => EntryFormSeminar(),        
+        '/formpesanan': (context) => EntryForm(),
       },
     );
   }

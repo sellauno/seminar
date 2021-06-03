@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 // import 'seminar.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
+import '../database/databaseseminar.dart';
 
 class EntryFormSeminar extends StatefulWidget {
   // final Seminar seminar;
@@ -163,7 +164,18 @@ class EntryFormSeminarState extends State<EntryFormSeminar> {
                           'Save',
                           textScaleFactor: 1.5,
                         ),
-                        onPressed: () {
+                        onPressed: () async {
+                          await DatabaseSeminar.addSeminar(
+                            judul : judulController.text,
+                            waktu : waktuController.text,
+                            harga : int.parse(hargaController.text),
+                            kuota : int.parse(kuotaController.text),
+                            lokasi : lokasiController.text,
+                            pembicara : pembicaraController.text,
+                      );
+                          Navigator.pushNamed(context, '/formseminar');
+                            
+
 //                           if (seminar == null) {
 //                             seminar = Seminar(
 //                                 judulController.text,

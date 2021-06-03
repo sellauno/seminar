@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:seminar/loginpage.dart';
-import 'package:seminar/loginprosesgoogle.dart';
+import 'package:seminar/login/loginpage.dart';
+import 'package:seminar/login/loginprosesgoogle.dart';
 
 class PesananPage extends StatefulWidget {
   @override
@@ -9,6 +9,7 @@ class PesananPage extends StatefulWidget {
 
 class _PesananPageState extends State<PesananPage> {
   int count = 1;
+  int _selectedIndex = 1;
 
   List<Widget> seminarList;
 
@@ -20,7 +21,7 @@ class _PesananPageState extends State<PesananPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Daftar Seminar'),
+        title: Text('Daftar Pesanan'),
       ),
       body: Column(children: [
         Expanded(
@@ -32,7 +33,7 @@ class _PesananPageState extends State<PesananPage> {
           child: FloatingActionButton(
             child: Icon(Icons.add),
             onPressed: () async {
-              Navigator.pushNamed(context, '/formpemesanan');
+              Navigator.pushNamed(context, '/formpesanan');
               // var seminar = await navigateToEntryForm(context, null);
               // if (seminar != null) {
               //   //TODO 2 Panggil Fungsi untuk Insert ke DB
@@ -56,18 +57,26 @@ class _PesananPageState extends State<PesananPage> {
             title: Text('Pesanan'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.mail),
-            title: Text('Inbox'),
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.person),
             title: Text('Akun'),
           ),
         ],
-        currentIndex: 0,
+        currentIndex: _selectedIndex,
         selectedItemColor: Colors.green,
         unselectedItemColor: Colors.grey,
         showUnselectedLabels: true,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+            if (_selectedIndex == 0) {
+              Navigator.pushNamed(context, '/seminar');
+            } else if (_selectedIndex == 1) {
+              Navigator.pushNamed(context, '/pesanan');
+            } else {
+              Navigator.pushNamed(context, '/login');
+            }
+          });
+        },
       ),
     );
   }
@@ -86,14 +95,12 @@ class _PesananPageState extends State<PesananPage> {
               child: Icon(Icons.date_range),
             ),
             title: Text(
-              "Judul Seminar",
+              "Pembeli",
               style: textStyle,
             ),
-            subtitle: Text("Pembicara : " +
-                "\nWaktu : " +
-                "\nLokasi : " +
-                "\nKuota  : " +
-                "\nHarga  : "),
+            subtitle: Text("Nama : " +
+                "\nSeminar : " +
+                "\nTanggal : "),
             trailing: GestureDetector(
               child: Icon(Icons.delete),
               onTap: () async {

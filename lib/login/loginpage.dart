@@ -1,8 +1,9 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:seminar/loginprosesgoogle.dart';
-import 'package:seminar/home.dart';
+import 'package:seminar/login/loginprosesgoogle.dart';
+import 'package:seminar/pages/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'loginprosesemail.dart';
+import '../login/loginprosesemail.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -15,6 +16,15 @@ class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  final FocusNode _uidFocusNode = FocusNode();
+  
+  Future<FirebaseApp> _initializeFirebase() async {
+    FirebaseApp firebaseApp = await Firebase.initializeApp();
+
+    return firebaseApp;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

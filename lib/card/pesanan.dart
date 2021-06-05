@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 
-class SeminarCard extends StatelessWidget {
-  final String judul;
-  final String pembicara;
-  final String waktu;
-  final String lokasi;
-  final int kuota;
-  final int harga;
+class PesananCard extends StatelessWidget {
+  final String nama;
+  final String email;
+  final String noTelp;
+  final String idSeminar;
   //// Pointer to Update Function
   final Function onUpdate;
   //// Pointer to Delete Function
   final Function onDelete;
 
-  SeminarCard(this.judul,this.pembicara,this.waktu,this.lokasi,this.kuota,this.harga,
-  {this.onUpdate, this.onDelete});
+  PesananCard(this.nama, this.email, this.noTelp, this.idSeminar, this.onUpdate, this.onDelete);
 
   @override
   Widget build(BuildContext context) {
@@ -26,14 +23,12 @@ class SeminarCard extends StatelessWidget {
           child: Icon(Icons.date_range),
         ),
         title: Text(
-          judul,
+          email,
           style: TextStyle(fontSize: 25),
         ),
-        subtitle: Text("Pembicara : " + pembicara +
-            "\nWaktu : " + waktu + 
-            "\nLokasi : " + lokasi +
-            "\nKuota  : " + kuota.toString() +
-            "\nHarga  : "+ harga.toString()),
+        subtitle: Text("Nama : " + nama +
+            "\nNo Telp : " + noTelp + 
+            "\nSeminar : " + idSeminar),
         trailing: GestureDetector(
           child: Icon(Icons.delete),
           onTap: () async {

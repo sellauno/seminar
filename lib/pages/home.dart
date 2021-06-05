@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:seminar/seminar.dart';
+import 'package:seminar/card/seminar.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -45,9 +45,10 @@ class _HomePageState extends State<HomePage> {
                         data['lokasi'],
                         data['kuota'],
                         data['harga'],
-                        onUpdate: () {
-                          //_seminar.doc(e.id).update({"age": e.data()['age'] + 1});
-                        },
+                        e.id,
+                        // onUpdate: () {
+                        //   _seminar.doc(e.id).update({"age": e.data()['age'] + 1});
+                        // },
                         onDelete: () {
                           _seminar.doc(e.id).delete();
                         },

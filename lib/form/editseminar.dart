@@ -4,12 +4,23 @@ import 'dart:async';
 import 'package:intl/intl.dart';
 import '../database/databaseseminar.dart';
 
-class EntryFormSeminar extends StatefulWidget {
+class EditFormSeminar extends StatefulWidget {
+  final String judul;
+  final String pembicara;
+  final String waktu;
+  final String lokasi;
+  final int kuota;
+  final int harga;
+  final String documentId;
+
+  EditFormSeminar({this.judul, this.pembicara, this.waktu, this.lokasi,
+      this.kuota, this.harga, this.documentId});
+
   @override
-  EntryFormSeminarState createState() => EntryFormSeminarState(/*this.seminar*/);
+  EditFormSeminarState createState() => EditFormSeminarState();
 }
 
-class EntryFormSeminarState extends State<EntryFormSeminar> {
+class EditFormSeminarState extends State<EditFormSeminar> {
   TextEditingController judulController = TextEditingController();
   TextEditingController waktuController = TextEditingController();
   TextEditingController hargaController = TextEditingController();
@@ -17,21 +28,19 @@ class EntryFormSeminarState extends State<EntryFormSeminar> {
   TextEditingController lokasiController = TextEditingController();
   TextEditingController pembicaraController = TextEditingController();
   DateTime selectedDate = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
-//kondisi
-    // if (seminar != null) {
-    //   judulController.text = seminar.judul;
-    //   waktuController.text = seminar.waktu;
-    //   hargaController.text = seminar.harga.toString();
-    //   kuotaController.text = seminar.kuota.toString();
-    //   lokasiController.text = seminar.lokasi;
-    //   pembicaraController.text = seminar.getPembicara;
-    // }
-//ubah
+    judulController.text = widget.judul;
+    waktuController.text = widget.waktu;
+    hargaController.text = widget.harga.toString();
+    kuotaController.text = widget.kuota.toString();
+    lokasiController.text = widget.lokasi;
+    pembicaraController.text = widget.pembicara;
+
     return Scaffold(
         appBar: AppBar(
-          title: Text('Tambah'),
+          //title: seminar == null ? Text('Tambah') : Text('Ubah'),
           leading: Icon(Icons.keyboard_arrow_left),
         ),
         body: Padding(
@@ -141,7 +150,7 @@ class EntryFormSeminarState extends State<EntryFormSeminar> {
                   ),
                   onTap: () => _selectDate(context),
                   onChanged: (value) {
-//
+                    
                   },
                 ),
               ),
@@ -161,36 +170,16 @@ class EntryFormSeminarState extends State<EntryFormSeminar> {
                           textScaleFactor: 1.5,
                         ),
                         onPressed: () async {
-                          await DatabaseSeminar.addSeminar(
-                            judul : judulController.text,
-                            waktu : waktuController.text,
-                            harga : int.parse(hargaController.text),
-                            kuota : int.parse(kuotaController.text),
-                            lokasi : lokasiController.text,
-                            pembicara : pembicaraController.text,
-                      );
+                          await DatabaseSeminar.updateSeminar(
+                            docId: widget.documentId,
+                            judul: judulController.text,
+                            waktu: waktuController.text,
+                            harga: int.parse(hargaController.text),
+                            kuota: int.parse(kuotaController.text),
+                            lokasi: lokasiController.text,
+                            pembicara: pembicaraController.text,
+                          );
                           Navigator.of(context).pop();
-                            
-
-//                           if (seminar == null) {
-//                             seminar = Seminar(
-//                                 judulController.text,
-//                                 waktuController.text,
-//                                 int.parse(hargaController.text),
-//                                 int.parse(kuotaController.text),
-//                                 lokasiController.text,
-//                                 pembicaraController.text);
-//                           } else {
-// // ubah data
-//                             seminar.judul = judulController.text;
-//                             seminar.waktu = waktuController.text;
-//                             seminar.harga = int.parse(hargaController.text);
-//                             seminar.kuota = int.parse(kuotaController.text);
-//                             seminar.lokasi = lokasiController.text;
-//                             seminar.setPembicara = pembicaraController.text;
-//                           }
-// // kembali ke layar sebelumnya dengan membawa objek seminar
-//                           Navigator.pop(context, seminar);
                         },
                       ),
                     ),
@@ -218,6 +207,7 @@ class EntryFormSeminarState extends State<EntryFormSeminar> {
           ),
         ));
   }
+
 //DatePicker
   Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(

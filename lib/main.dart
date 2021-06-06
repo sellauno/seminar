@@ -5,6 +5,7 @@ import 'package:seminar/pages/home.dart';
 import 'form/editseminar.dart';
 import 'form/entryform.dart';
 import 'form/entryseminar.dart';
+import 'login/register.dart';
 import 'pages/pesananpage.dart';
 
 void main() async {
@@ -33,7 +34,8 @@ class MyApp extends StatelessWidget {
         '/pesanan': (context) => PesananPage(),
         '/formseminar': (context) => EntryFormSeminar(),        
         '/formpesanan': (context) => EntryForm(),
-        '/editseminar': (context) => EditFormSeminar(),   
+        '/editseminar': (context) => EditFormSeminar(),
+        '/register': (context) => Register(),   
       },
     );
   }

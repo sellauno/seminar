@@ -2,12 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:seminar/card/seminar.dart';
 
-class HomePage extends StatefulWidget {
+class HomePembeli extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomePembeliState createState() => _HomePembeliState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePembeliState extends State<HomePembeli> {
   int count = 1;
   List<Widget> seminarList;
   int _selectedIndex = 0;
@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Daftar Seminar'),
+        title: Text('Home for Pembeli'),
       ),
       body: Column(children: [
         Expanded(
@@ -35,7 +35,6 @@ class _HomePageState extends State<HomePage> {
                 // stream: _seminar.orderBy('age', descending: true).snapshots(),
                 stream: _seminar.snapshots(),
                 builder: (buildContext, snapshot) {
-                  if(snapshot.data == null) return CircularProgressIndicator();
                   return Column(
                     children: snapshot.data.docs.map((e) {
                       Map<String, dynamic> data = e.data();

@@ -1,9 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:seminar/login/loginprosesgoogle.dart';
 import 'package:seminar/pages/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:seminar/pages/homepembeli.dart';
 import '../login/loginprosesemail.dart';
+import '../database/databaseuser.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -18,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
 
   final FocusNode _uidFocusNode = FocusNode();
-  
+
   Future<FirebaseApp> _initializeFirebase() async {
     FirebaseApp firebaseApp = await Firebase.initializeApp();
 
@@ -43,7 +46,6 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               SizedBox(height: 40),
-
               Padding(
                 padding: const EdgeInsets.only(top: 5, left: 15, right: 15),
                 child: Form(
@@ -63,7 +65,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       TextFormField(
                         controller: _passwordController,
-                        decoration: const InputDecoration(labelText: 'Password'),
+                        decoration:
+                            const InputDecoration(labelText: 'Password'),
                         obscureText: true,
                         validator: (String value) {
                           if (value.isEmpty) {
@@ -85,12 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                                   pass: _passwordController.text);
                               User user = result.user;
                               if (user != null) {
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) => EmailScreen(
-                                //               user: result.user,
-                                //             )));
+                                navigateUser(user.uid);
                               } else {
                                 // Show Dialog
                                 showDialog(
@@ -123,7 +121,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-
               Container(
                   width: 250,
                   margin: EdgeInsets.only(top: 10, bottom: 15),
@@ -142,13 +139,7 @@ class _LoginPageState extends State<LoginPage> {
       onPressed: () {
         signInWithGoogle().then((result) {
           if (result != null) {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) {
-                  return HomePage();
-                },
-              ),
-            );
+            navigateUser(result);
           }
         });
       },
@@ -186,5 +177,28 @@ class _LoginPageState extends State<LoginPage> {
               style: TextStyle(color: Colors.blue),
             ),
             onTap: () => Navigator.pushNamed(context, '/register')));
+  }
+
+  Future<void> navigateUser(String userId) async {
+    FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    DocumentReference documentReferencer =
+        _firestore.collection('admin').doc(userId);
+    if (documentReferencer != null) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) {
+            return HomePage();
+          },
+        ),
+      );
+    } else {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) {
+            return HomePembeli();
+          },
+        ),
+      );
+    }
   }
 }

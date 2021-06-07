@@ -7,7 +7,10 @@ final GoogleSignIn googleSignIn = GoogleSignIn();
 String name;
 String email;
 String imageUrl;
+bool loginwithgoogle = false;
+
 Future<String> signInWithGoogle() async {
+  loginwithgoogle = true;
   await Firebase.initializeApp();
   final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
   final GoogleSignInAuthentication googleSignInAuthentication =

@@ -2,14 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:seminar/login/loginprosesgoogle.dart';
-import 'package:seminar/pages/home.dart';
+import 'package:seminar/pages/homeadmin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:seminar/pages/homepembeli.dart';
 import '../login/loginprosesemail.dart';
-import '../database/databaseuser.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
-
+String role;
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -184,6 +183,7 @@ class _LoginPageState extends State<LoginPage> {
     DocumentReference documentReferencer =
         _firestore.collection('admin').doc(userId);
     if (documentReferencer != null) {
+      role = "admin";
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) {
@@ -192,6 +192,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
     } else {
+      role = "pembeli";
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) {

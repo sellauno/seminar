@@ -1,11 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:seminar/login/loginpage.dart';
-import 'package:seminar/pages/home.dart';
+import 'package:seminar/pages/homeadmin.dart';
 import 'form/editseminar.dart';
 import 'form/entryform.dart';
 import 'form/entryseminar.dart';
 import 'login/register.dart';
+import 'pages/akun.dart';
+import 'pages/homepembeli.dart';
 import 'pages/pesananpage.dart';
 
 void main() async {
@@ -24,18 +26,17 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.deepOrange,
       ),
-      home: HomePage(),
+      home: HomePembeli(),
       routes: {
-        // '/register': (context) => RegisterEmailSection(),
-        // '/signin': (context) => EmailPasswordForm(),
-        // '/firstScreen': (context) => FirstScreen(),
         '/seminar': (context) => HomePage(),
         '/login': (context) => LoginPage(),
         '/pesanan': (context) => PesananPage(),
         '/formseminar': (context) => EntryFormSeminar(),        
         '/formpesanan': (context) => EntryForm(),
         '/editseminar': (context) => EditFormSeminar(),
-        '/register': (context) => Register(),   
+        '/register': (context) => Register(),  
+        '/homePembeli': (context) => HomePembeli(), 
+        '/akun': (context) => AkunPage(),
       },
     );
   }

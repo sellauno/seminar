@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seminar/login/loginpage.dart';
 import 'package:seminar/login/loginprosesgoogle.dart';
@@ -73,7 +74,12 @@ class _PesananPageState extends State<PesananPage> {
             } else if (_selectedIndex == 1) {
               Navigator.pushNamed(context, '/pesanan');
             } else {
-              Navigator.pushNamed(context, '/login');
+              var user = FirebaseAuth.instance.currentUser;
+              if (user != null) {
+                Navigator.pushNamed(context, '/akun');
+              } else {
+                Navigator.pushNamed(context, '/login');
+              }
             }
           });
         },

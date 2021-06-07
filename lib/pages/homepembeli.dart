@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seminar/card/seminar.dart';
 
@@ -9,17 +10,12 @@ class HomePembeli extends StatefulWidget {
 
 class _HomePembeliState extends State<HomePembeli> {
   int count = 1;
-  List<Widget> seminarList;
   int _selectedIndex = 0;
   CollectionReference _seminar =
       FirebaseFirestore.instance.collection('seminar');
 
   @override
   Widget build(BuildContext context) {
-    if (seminarList == null) {
-      seminarList = [];
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Home for Pembeli'),
@@ -35,6 +31,7 @@ class _HomePembeliState extends State<HomePembeli> {
                 // stream: _seminar.orderBy('age', descending: true).snapshots(),
                 stream: _seminar.snapshots(),
                 builder: (buildContext, snapshot) {
+                  if(snapshot.data == null) return CircularProgressIndicator();
                   return Column(
                     children: snapshot.data.docs.map((e) {
                       Map<String, dynamic> data = e.data();
@@ -106,7 +103,13 @@ class _HomePembeliState extends State<HomePembeli> {
             } else if (_selectedIndex == 1) {
               Navigator.pushNamed(context, '/pesanan');
             } else {
-              Navigator.pushNamed(context, '/login');
+              var user = FirebaseAuth.instance.currentUser;
+              if (user != null) {
+                Navigator.pushNamed(context, '/akun');
+              } else {
+                Navigator.pushNamed(context, '/login');
+              }
+              
             }
           });
         },

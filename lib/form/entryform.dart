@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:seminar/database/databasepesanan.dart';
+import 'package:seminar/database/databaseseminar.dart';
 // import 'dbhelperseminar.dart';
 // import 'seminar.dart';
 // import 'pesanan.dart';
@@ -12,24 +15,17 @@ class EntryForm extends StatefulWidget {
 
 //class controller
 class EntryFormState extends State<EntryForm> {
-  void initState() {
-    updateListView();
-  }
-
-  // Pesanan pesanan;
-  // EntryFormState(this.pesanan);
   TextEditingController namaController = TextEditingController();
   TextEditingController idSeminarController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController notelpController = TextEditingController();
-  // DbHelperSeminar dbHelperSeminar = DbHelperSeminar();
-  // List<Seminar> seminarList = [];
-  // Seminar seminar;
+  TextEditingController totalController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          // title: pesanan == null ? Text('Tambah') : Text('Ubah'),
+          title: Text('Tambah'),
           leading: Icon(Icons.keyboard_arrow_left),
         ),
         body: Padding(
@@ -87,33 +83,51 @@ class EntryFormState extends State<EntryForm> {
                   },
                 ),
               ),
-// idSeminar
-              // Padding(
-              //   padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-              //   child: DropdownButtonFormField(
-              //     hint: Text('Pilih Seminar yang diinginkan'),
-              //     items: /*seminarList
-              //         .map<DropdownMenuItem<Seminar>>((Seminar value) {
-              //         return new DropdownMenuItem<Seminar>(
-              //           value: value,
-              //           child: new Text(value.judul),
-              //         );
-              //     }).toList(),*/
-              //     "buku",
-              //     // onChanged: (Seminar value) {
-              //     //   setState(() {
-              //     //     idSeminarController.text = value.id.toString();
-              //     //     this.seminar = value;
-              //     //   });
-              //     },
-              //     decoration: InputDecoration(
-              //       //labelText: 'No Telepon',
-              //       border: OutlineInputBorder(
-              //         borderRadius: BorderRadius.circular(5.0),
-              //       ),
-              //     ),
-              //   ),
-              // ),
+
+              StreamBuilder<QuerySnapshot>(
+                stream: DatabaseSeminar.readSeminar(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Something went wrong');
+                  } else if (snapshot.hasData || snapshot.data != null) {
+                    return Padding(
+                      padding: EdgeInsets.only(top: 20.0, bottom: 20.0, right: 10.0),
+                      child: DropdownButtonFormField(
+                        hint: Text('Pilih Seminar yang diinginkan'),
+                        items:
+                            snapshot.data.docs.map((DocumentSnapshot document) {
+                          Map<String, dynamic> data = document.data();
+                          return new DropdownMenuItem<String>(
+                            value: document.id,
+                            child: Column(
+                              children: [
+                                new Text(
+                                  data['judul'],
+                                ),
+                                // new Text(
+                                //   " (Rp "+ data['harga'].toString() +")",
+                                // ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            totalController.text = value;
+                            // idSeminarController.text = value.id;
+                            // totalController.text = value.data().data['harga'];
+                          });
+                        },
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                },
+              ),
 // tombol button
               Padding(
                 padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
@@ -122,28 +136,21 @@ class EntryFormState extends State<EntryForm> {
 // tombol simpan
                     Expanded(
                       child: RaisedButton(
-                        color: Theme.of(context).primaryColorDark,
-                        textColor: Theme.of(context).primaryColorLight,
-                        child: Text(
-                          'Save',
-                          textScaleFactor: 1.5,
-                        ),
-                        onPressed: () async {
-// tambah data
-                          // pesanan = Pesanan(
-                          //     namaController.text,
-                          //     emailController.text,
-                          //     notelpController.text,
-                          //     int.parse(idSeminarController.text));
-                          // if (seminar.kuota > 0) {
-                          //   seminar.kuota -= 1;
-                          //   await dbHelperSeminar.update(seminar);
-                          }
-
-// kembali ke layar sebelumnya dengan membawa objek pesanan
-                          // Navigator.pop(context, pesanan);
-                        // },
-                      ),
+                          color: Theme.of(context).primaryColorDark,
+                          textColor: Theme.of(context).primaryColorLight,
+                          child: Text(
+                            'Save',
+                            textScaleFactor: 1.5,
+                          ),
+                          onPressed: () async {
+                            await DatabasePesanan.addPesanan(
+                              email: emailController.text,
+                              nama: namaController.text,
+                              noTelp: notelpController.text,
+                              idSeminar: idSeminarController.text,
+                            );
+                            Navigator.of(context).pop();
+                          }),
                     ),
                     Container(
                       width: 5.0,
@@ -168,15 +175,5 @@ class EntryFormState extends State<EntryForm> {
             ],
           ),
         ));
-  }
-
-  void updateListView() {
-// select data Seminar
-    // Future<List<Seminar>> seminarListFuture = dbHelperSeminar.getSeminarListReady();
-    // seminarListFuture.then((seminarList) {
-    //   setState(() {
-    //     this.seminarList = seminarList;
-    //   });
-    // });
   }
 }

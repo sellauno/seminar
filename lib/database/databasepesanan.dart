@@ -1,82 +1,73 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:seminar/login/loginprosesgoogle.dart';
 
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-final CollectionReference _mainCollection = _firestore.collection('tiket');
+final CollectionReference _mainCollection = _firestore.collection('pembeli');
 
 class DatabasePesanan {
-  static String userUid;
+  // static String userUid;
 
-  static Future<void> addSeminar({
-    String judul,
-    String pembicara,
-    String waktu,
-    String lokasi,
-    int kuota,
-    int harga,
-
+  static Future<void> addPesanan({
+    String nama,
+    String email,
+    String noTelp,
+    String idSeminar,
   }) async {
     DocumentReference documentReferencer =
-        _mainCollection.doc(userUid).collection('seminar').doc();
+        _mainCollection.doc(userUid).collection('Pesanan').doc();
 
     Map<String, dynamic> data = <String, dynamic>{
-      "judul": judul,
-      "pembicara": pembicara,
-      "waktu": waktu,
-      "lokasi": lokasi,
-      "kuota": kuota,
-      "harga": harga,
+      "nama": nama,
+      "email": email,
+      "noTelp": noTelp,
+      "idSeminar": idSeminar,
     };
 
     await documentReferencer
         .set(data)
-        .whenComplete(() => print("Note item added to the database"))
+        .whenComplete(() => print("Order added to the database"))
         .catchError((e) => print(e));
   }
 
-  static Future<void> updateSeminar({
+  static Future<void> updatePesanan({
     String docId,
-    String judul,
-    String pembicara,
-    String waktu,
-    String lokasi,
-    int kuota,
-    int harga,
-
+    String nama,
+    String email,
+    String noTelp,
+    String idSeminar,
   }) async {
     DocumentReference documentReferencer =
-        _mainCollection.doc(userUid).collection('seminar').doc(docId);
+        _mainCollection.doc(userUid).collection('Pesanan').doc(docId);
 
     Map<String, dynamic> data = <String, dynamic>{
-      "judul": judul,
-      "pembicara": pembicara,
-      "waktu": waktu,
-      "lokasi": lokasi,
-      "kuota": kuota,
-      "harga": harga,
+      "nama": nama,
+      "email": email,
+      "noTelp": noTelp,
+      "idSeminar": idSeminar,
     };
 
     await documentReferencer
         .update(data)
-        .whenComplete(() => print("Note item updated in the database"))
+        .whenComplete(() => print("Order updated in the database"))
         .catchError((e) => print(e));
   }
 
-  static Stream<QuerySnapshot> readSeminar() {
-    CollectionReference notesItemCollection =
-        _mainCollection.doc(userUid).collection('seminar');
+  static Stream<QuerySnapshot> readPesanan() {
+    CollectionReference pesananItemCollection =
+        _mainCollection.doc(userUid).collection('Pesanan');
 
-    return notesItemCollection.snapshots();
+    return pesananItemCollection.snapshots();
   }
 
-  static Future<void> deleteSeminar({
+  static Future<void> deletePesanan({
     String docId,
   }) async {
     DocumentReference documentReferencer =
-        _mainCollection.doc(userUid).collection('seminar').doc(docId);
+        _mainCollection.doc(userUid).collection('Pesanan').doc(docId);
 
     await documentReferencer
         .delete()
-        .whenComplete(() => print('Note item deleted from the database'))
+        .whenComplete(() => print('Order deleted from the database'))
         .catchError((e) => print(e));
   }
 }

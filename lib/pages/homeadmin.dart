@@ -10,17 +10,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int count = 1;
-  List<Widget> seminarList;
   int _selectedIndex = 0;
   CollectionReference _seminar =
       FirebaseFirestore.instance.collection('seminar');
 
   @override
   Widget build(BuildContext context) {
-    if (seminarList == null) {
-      seminarList = [];
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Daftar Seminar'),
@@ -69,14 +64,6 @@ class _HomePageState extends State<HomePage> {
             child: Icon(Icons.add),
             onPressed: () async {
               Navigator.pushNamed(context, '/formseminar');
-              // var seminar = await navigateToEntryForm(context, null);
-              // if (seminar != null) {
-              //   //TODO 2 Panggil Fungsi untuk Insert ke DB
-              //   int result = await dbHelperSeminar.insert(seminar);
-              //   if (result > 0) {
-              //     updateListView();
-              //   }
-              // }
             },
           ),
         ),

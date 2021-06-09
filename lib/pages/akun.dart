@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:seminar/login/loginpage.dart';
 import 'package:seminar/login/loginprosesemail.dart';
 import 'package:seminar/login/loginprosesgoogle.dart';
 import 'homepembeli.dart';
@@ -31,7 +32,7 @@ class _AkunPageState extends State<AkunPage> {
       body: Column(children: [
         Container(
           padding: EdgeInsets.all(20),
-          child: Text("name"),
+          child: Text("email"),
         ),
         RaisedButton(
           onPressed: () {
@@ -42,7 +43,7 @@ class _AkunPageState extends State<AkunPage> {
             }
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) {
-              return HomePembeli();
+              return LoginPage();
             }), ModalRoute.withName('/'));
           },
           color: Colors.deepPurple,

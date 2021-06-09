@@ -5,12 +5,13 @@ class PesananCard extends StatelessWidget {
   final String email;
   final String noTelp;
   final String idSeminar;
+  final String docId;
   //// Pointer to Update Function
-  final Function onUpdate;
+  // final Function onUpdate;
   //// Pointer to Delete Function
   final Function onDelete;
 
-  PesananCard(this.nama, this.email, this.noTelp, this.idSeminar, this.onUpdate, this.onDelete);
+  PesananCard(this.nama, this.email, this.noTelp, this.idSeminar, this.docId, {this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class PesananCard extends StatelessWidget {
         ),
         title: Text(
           email,
-          style: TextStyle(fontSize: 25),
+          style: TextStyle(fontSize: 20),
         ),
         subtitle: Text("Nama : " + nama +
             "\nNo Telp : " + noTelp + 

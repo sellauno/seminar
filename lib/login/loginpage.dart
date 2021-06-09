@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:seminar/database/databaseuser.dart';
 import 'package:seminar/login/loginprosesgoogle.dart';
 import 'package:seminar/pages/homeadmin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,6 +10,7 @@ import '../login/loginprosesemail.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 String role;
+
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -87,6 +89,9 @@ class _LoginPageState extends State<LoginPage> {
                                   pass: _passwordController.text);
                               User user = result.user;
                               if (user != null) {
+                                setState(() {
+                                  userUid = user.uid;
+                                });
                                 navigateUser(user.uid);
                               } else {
                                 // Show Dialog
@@ -138,6 +143,9 @@ class _LoginPageState extends State<LoginPage> {
       onPressed: () {
         signInWithGoogle().then((result) {
           if (result != null) {
+            setState(() {
+              userUid = result;
+            });
             navigateUser(result);
           }
         });

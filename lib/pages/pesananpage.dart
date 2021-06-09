@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:seminar/card/pesanan.dart';
+import 'package:seminar/database/databasepesanan.dart';
 import 'package:seminar/login/loginpage.dart';
 import 'package:seminar/login/loginprosesgoogle.dart';
 
@@ -11,6 +14,8 @@ class PesananPage extends StatefulWidget {
 class _PesananPageState extends State<PesananPage> {
   int count = 1;
   int _selectedIndex = 1;
+  CollectionReference _pesanan =
+      FirebaseFirestore.instance.collection('pembeli').doc("DlvUnBubV2aIYR83mbQ81Jfp9i62").collection('Pesanan');
 
   List<Widget> seminarList;
 
@@ -26,7 +31,38 @@ class _PesananPageState extends State<PesananPage> {
       ),
       body: Column(children: [
         Expanded(
-          child: createListView(),
+          child: ListView(
+            children: [
+              StreamBuilder<QuerySnapshot>(
+                // contoh penggunaan srteam
+                // _seminar.orderBy('age', descending: true).snapshots()
+                // _seminar.where('age', isLessThan: 30).snapshots()
+                // stream: _seminar.orderBy('age', descending: true).snapshots(),
+                stream: DatabasePesanan.readPesanan(),
+                builder: (buildContext, snapshot) {
+                  if (snapshot.data == null) return CircularProgressIndicator();
+                  return Column(
+                    children: snapshot.data.docs.map((e) {
+                      Map<String, dynamic> data = e.data();
+                      return PesananCard(
+                        data['nama'],
+                        data['email'],
+                        data['noTelp'],
+                        data['idSeminar'],
+                        e.id,
+                        onDelete: () {
+                          _pesanan.doc(e.id).delete();
+                        },
+                      );
+                    }).toList(),
+                  );
+                },
+              ),
+              SizedBox(
+                height: 150,
+              )
+            ],
+          ),
         ),
         Container(
           alignment: Alignment.bottomRight,
@@ -104,9 +140,7 @@ class _PesananPageState extends State<PesananPage> {
               "Pembeli",
               style: textStyle,
             ),
-            subtitle: Text("Nama : " +
-                "\nSeminar : " +
-                "\nTanggal : "),
+            subtitle: Text("Nama : " + "\nSeminar : " + "\nTanggal : "),
             trailing: GestureDetector(
               child: Icon(Icons.delete),
               onTap: () async {

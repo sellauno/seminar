@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:seminar/login/loginprosesgoogle.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
-String email;
+// String email;
 
 Future<SignInSignUpResult> createUser({String email, String pass}) async {
   await Firebase.initializeApp();

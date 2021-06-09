@@ -170,27 +170,6 @@ class EntryFormSeminarState extends State<EntryFormSeminar> {
                             pembicara : pembicaraController.text,
                       );
                           Navigator.of(context).pop();
-                            
-
-//                           if (seminar == null) {
-//                             seminar = Seminar(
-//                                 judulController.text,
-//                                 waktuController.text,
-//                                 int.parse(hargaController.text),
-//                                 int.parse(kuotaController.text),
-//                                 lokasiController.text,
-//                                 pembicaraController.text);
-//                           } else {
-// // ubah data
-//                             seminar.judul = judulController.text;
-//                             seminar.waktu = waktuController.text;
-//                             seminar.harga = int.parse(hargaController.text);
-//                             seminar.kuota = int.parse(kuotaController.text);
-//                             seminar.lokasi = lokasiController.text;
-//                             seminar.setPembicara = pembicaraController.text;
-//                           }
-// // kembali ke layar sebelumnya dengan membawa objek seminar
-//                           Navigator.pop(context, seminar);
                         },
                       ),
                     ),

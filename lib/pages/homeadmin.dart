@@ -25,10 +25,6 @@ class _HomePageState extends State<HomePage> {
           child: ListView(
             children: [
               StreamBuilder<QuerySnapshot>(
-                // contoh penggunaan srteam
-                // _seminar.orderBy('age', descending: true).snapshots()
-                // _seminar.where('age', isLessThan: 30).snapshots()
-                // stream: _seminar.orderBy('age', descending: true).snapshots(),
                 stream: _seminar.snapshots(),
                 builder: (buildContext, snapshot) {
                   if(snapshot.data == null) return CircularProgressIndicator();

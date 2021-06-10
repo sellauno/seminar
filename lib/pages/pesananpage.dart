@@ -15,7 +15,7 @@ class _PesananPageState extends State<PesananPage> {
   int count = 1;
   int _selectedIndex = 1;
   CollectionReference _pesanan =
-      FirebaseFirestore.instance.collection('pembeli').doc("DlvUnBubV2aIYR83mbQ81Jfp9i62").collection('Pesanan');
+      FirebaseFirestore.instance.collection('pembeli').doc(userUid).collection('Pesanan');
 
   List<Widget> seminarList;
 
@@ -71,14 +71,6 @@ class _PesananPageState extends State<PesananPage> {
             child: Icon(Icons.add),
             onPressed: () async {
               Navigator.pushNamed(context, '/formpesanan');
-              // var seminar = await navigateToEntryForm(context, null);
-              // if (seminar != null) {
-              //   //TODO 2 Panggil Fungsi untuk Insert ke DB
-              //   int result = await dbHelperSeminar.insert(seminar);
-              //   if (result > 0) {
-              //     updateListView();
-              //   }
-              // }
             },
           ),
         ),
@@ -120,44 +112,6 @@ class _PesananPageState extends State<PesananPage> {
           });
         },
       ),
-    );
-  }
-
-  ListView createListView() {
-    TextStyle textStyle = Theme.of(context).textTheme.headline5;
-    return ListView.builder(
-      itemCount: count,
-      itemBuilder: (BuildContext context, int index) {
-        return Card(
-          color: Colors.white,
-          elevation: 2.0,
-          child: ListTile(
-            leading: CircleAvatar(
-              backgroundColor: Colors.red,
-              child: Icon(Icons.date_range),
-            ),
-            title: Text(
-              "Pembeli",
-              style: textStyle,
-            ),
-            subtitle: Text("Nama : " + "\nSeminar : " + "\nTanggal : "),
-            trailing: GestureDetector(
-              child: Icon(Icons.delete),
-              onTap: () async {
-                //Memanggil Fungsi untuk Delete dari DB berdasarkan Seminar
-                // await dbHelperSeminar.delete(seminarList[index].id);
-                // updateListView();
-              },
-            ),
-            onTap: () async {
-              // var seminar = await navigateToEntryForm(context, this.seminarList[index]);
-              // Memanggil Fungsi untuk Edit data
-              // await dbHelperSeminar.update(seminar);
-              // updateListView();
-            },
-          ),
-        );
-      },
     );
   }
 }

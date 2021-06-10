@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:seminar/database/databasepesanan.dart';
 import 'package:seminar/database/databaseseminar.dart';
+import 'package:intl/intl.dart';
 // import 'dbhelperseminar.dart';
 // import 'seminar.dart';
 // import 'pesanan.dart';
@@ -20,6 +21,7 @@ class EntryFormState extends State<EntryForm> {
   TextEditingController emailController = TextEditingController();
   TextEditingController notelpController = TextEditingController();
   TextEditingController totalController = TextEditingController();
+  String total;
 
   @override
   Widget build(BuildContext context) {
@@ -91,12 +93,14 @@ class EntryFormState extends State<EntryForm> {
                     return Text('Something went wrong');
                   } else if (snapshot.hasData || snapshot.data != null) {
                     return Padding(
-                      padding: EdgeInsets.only(top: 20.0, bottom: 20.0, right: 10.0),
+                      padding:
+                          EdgeInsets.only(top: 20.0, bottom: 20.0, right: 10.0),
                       child: DropdownButtonFormField(
                         hint: Text('Pilih Seminar yang diinginkan'),
                         items:
                             snapshot.data.docs.map((DocumentSnapshot document) {
                           Map<String, dynamic> data = document.data();
+                          total = data['harga'];
                           return new DropdownMenuItem<String>(
                             value: document.id,
                             child: Column(
@@ -113,9 +117,8 @@ class EntryFormState extends State<EntryForm> {
                         }).toList(),
                         onChanged: (value) {
                           setState(() {
-                            totalController.text = value;
-                            // idSeminarController.text = value.id;
-                            // totalController.text = value.data().data['harga'];
+                            idSeminarController.text = value.id;
+                            totalController.text = total;
                           });
                         },
                         decoration: InputDecoration(
@@ -127,6 +130,23 @@ class EntryFormState extends State<EntryForm> {
                     );
                   }
                 },
+              ),
+
+              Padding(
+                padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                child: TextField(
+                  controller: totalController,
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    labelText: 'Total',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                  ),
+                  onChanged: (value) {
+//
+                  },
+                ),
               ),
 // tombol button
               Padding(
@@ -143,10 +163,13 @@ class EntryFormState extends State<EntryForm> {
                             textScaleFactor: 1.5,
                           ),
                           onPressed: () async {
+                            var formatter = new DateFormat('yyyy-MM-dd hh:mm');
+                            String date = formatter.format(DateTime.now());
                             await DatabasePesanan.addPesanan(
                               email: emailController.text,
                               nama: namaController.text,
                               noTelp: notelpController.text,
+                              time: date,
                               idSeminar: idSeminarController.text,
                             );
                             Navigator.of(context).pop();

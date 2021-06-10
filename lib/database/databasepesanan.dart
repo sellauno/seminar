@@ -11,6 +11,7 @@ class DatabasePesanan {
     String nama,
     String email,
     String noTelp,
+    String time,
     String idSeminar,
   }) async {
     DocumentReference documentReferencer =
@@ -20,6 +21,7 @@ class DatabasePesanan {
       "nama": nama,
       "email": email,
       "noTelp": noTelp,
+      "time": time,
       "idSeminar": idSeminar,
     };
 
@@ -34,6 +36,7 @@ class DatabasePesanan {
     String nama,
     String email,
     String noTelp,
+    String time,
     String idSeminar,
   }) async {
     DocumentReference documentReferencer =
@@ -43,6 +46,7 @@ class DatabasePesanan {
       "nama": nama,
       "email": email,
       "noTelp": noTelp,
+      "time": time,
       "idSeminar": idSeminar,
     };
 

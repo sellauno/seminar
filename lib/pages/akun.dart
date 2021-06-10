@@ -14,51 +14,123 @@ class AkunPage extends StatefulWidget {
 
 class _AkunPageState extends State<AkunPage> {
   int count = 1;
-  List<Widget> seminarList;
   int _selectedIndex = 2;
-  CollectionReference _seminar =
-      FirebaseFirestore.instance.collection('seminar');
+ 
+  String nama = "";
+  String email = "";
+  String noTelp = "";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    dataAkun();
+
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (seminarList == null) {
-      seminarList = [];
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Akun'),
       ),
       body: Column(children: [
-        Container(
-          padding: EdgeInsets.all(20),
-          child: Text("email"),
-        ),
-        RaisedButton(
-          onPressed: () {
-            if(loginwithgoogle){
-              signOutGoogle();
-            }else{
-              signOut();
-            }
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) {
-              return LoginPage();
-            }), ModalRoute.withName('/'));
-          },
-          color: Colors.deepPurple,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Sign Out',
-              style: TextStyle(fontSize: 25, color: Colors.white),
-            ),
-          ),
-          elevation: 5,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-        )
-      ]),
+                    Container(
+                      child: Text(nama),
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(20),
+                      child: Text(email),
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(20),
+                      child: Text(noTelp),
+                    ),
+                    RaisedButton(
+                      onPressed: () {
+                        if (loginwithgoogle) {
+                          signOutGoogle();
+                          setState(() {
+                            loginwithgoogle = false;
+                            role = "";
+                          });
+                        } else {
+                          signOut();
+                        }
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(builder: (context) {
+                          return LoginPage();
+                        }), ModalRoute.withName('/'));
+                      },
+                      color: Colors.deepPurple,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Sign Out',
+                          style: TextStyle(fontSize: 25, color: Colors.white),
+                        ),
+                      ),
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(40)),
+                    )
+                  ]),
+      // ListView(
+      //   children: [
+      //     StreamBuilder<QuerySnapshot>(
+      //       stream: _akun,
+      //       builder: (buildContext, snapshot) {
+      //         if (snapshot.data == null) return CircularProgressIndicator();
+
+      //         return Column(
+      //           children: snapshot.data.docs.map((e) {
+      //             Map<String, dynamic> data = e.data();
+      //             return Column(children: [
+      //               Container(
+      //                 child: Text(data["nama"]),
+      //               ),
+      //               Container(
+      //                 padding: EdgeInsets.all(20),
+      //                 child: Text(data["email"]),
+      //               ),
+      //               Container(
+      //                 padding: EdgeInsets.all(20),
+      //                 child: Text(data["noTelp"]),
+      //               ),
+      //               RaisedButton(
+      //                 onPressed: () {
+      //                   if (loginwithgoogle) {
+      //                     signOutGoogle();
+      //                     setState(() {
+      //                       loginwithgoogle = false;
+      //                     });
+      //                   } else {
+      //                     signOut();
+      //                   }
+      //                   Navigator.of(context).pushAndRemoveUntil(
+      //                       MaterialPageRoute(builder: (context) {
+      //                     return LoginPage();
+      //                   }), ModalRoute.withName('/'));
+      //                 },
+      //                 color: Colors.deepPurple,
+      //                 child: Padding(
+      //                   padding: const EdgeInsets.all(8.0),
+      //                   child: Text(
+      //                     'Sign Out',
+      //                     style: TextStyle(fontSize: 25, color: Colors.white),
+      //                   ),
+      //                 ),
+      //                 elevation: 5,
+      //                 shape: RoundedRectangleBorder(
+      //                     borderRadius: BorderRadius.circular(40)),
+      //               )
+      //             ]);
+      //           }).toList(),
+      //         );
+      //       },
+      //     ),
+      //   ],
+      // ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -97,5 +169,27 @@ class _AkunPageState extends State<AkunPage> {
         },
       ),
     );
+  }
+
+  void dataAkun() async {
+    String dnama;
+    String demail;
+    String dnoTelp;
+    await FirebaseFirestore.instance
+        .collection(role)
+        .doc(userUid)
+        .get()
+        .then((DocumentSnapshot ds) {
+      Map<String, dynamic> data = ds.data();
+      dnama = data["nama"];
+      demail = data["email"];
+      dnoTelp = data["noTelp"];
+    });
+
+    setState(() {
+      nama = dnama;
+      email = demail;
+      noTelp = dnoTelp;
+    });
   }
 }

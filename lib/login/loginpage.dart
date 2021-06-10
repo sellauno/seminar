@@ -89,9 +89,6 @@ class _LoginPageState extends State<LoginPage> {
                                   pass: _passwordController.text);
                               User user = result.user;
                               if (user != null) {
-                                setState(() {
-                                  userUid = user.uid;
-                                });
                                 navigateUser(user.uid);
                               } else {
                                 // Show Dialog
@@ -143,9 +140,6 @@ class _LoginPageState extends State<LoginPage> {
       onPressed: () {
         signInWithGoogle().then((result) {
           if (result != null) {
-            setState(() {
-              userUid = result;
-            });
             navigateUser(result);
           }
         });
@@ -187,11 +181,18 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> navigateUser(String userId) async {
+    setState(() {
+      userUid = userId;
+    });
     FirebaseFirestore _firestore = FirebaseFirestore.instance;
     DocumentReference documentReferencer =
         _firestore.collection('admin').doc(userId);
-    if (documentReferencer != null) {
-      role = "admin";
+
+    var doc = await FirebaseFirestore.instance.collection('admin').doc(userId).get();
+   if (doc.exists) {
+      setState(() {
+        role = "admin";
+      });      
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) {
@@ -200,7 +201,10 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
     } else {
-      role = "pembeli";
+      setState(() {
+        role = "pembeli";
+      });
+      
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) {

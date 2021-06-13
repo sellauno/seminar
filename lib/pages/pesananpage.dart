@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seminar/card/pesanan.dart';
 import 'package:seminar/database/databasepesanan.dart';
-import 'package:seminar/login/loginpage.dart';
 import 'package:seminar/login/loginprosesgoogle.dart';
 
 class PesananPage extends StatefulWidget {
@@ -14,20 +13,26 @@ class PesananPage extends StatefulWidget {
 class _PesananPageState extends State<PesananPage> {
   int count = 1;
   int _selectedIndex = 1;
-  CollectionReference _pesanan =
-      FirebaseFirestore.instance.collection('pembeli').doc(userUid).collection('Pesanan');
+  CollectionReference _pesanan = FirebaseFirestore.instance
+      .collection('pembeli')
+      .doc(userUid)
+      .collection('Pesanan');
+  String judul = "-";
 
-  List<Widget> seminarList;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    ;
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (seminarList == null) {
-      seminarList = [];
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Daftar Pesanan'),
+        leading: Icon(Icons.assignment),
+        automaticallyImplyLeading: false,
       ),
       body: Column(children: [
         Expanded(
@@ -44,11 +49,13 @@ class _PesananPageState extends State<PesananPage> {
                   return Column(
                     children: snapshot.data.docs.map((e) {
                       Map<String, dynamic> data = e.data();
+                      dataSeminar(data['idSeminar']);
                       return PesananCard(
                         data['nama'],
                         data['email'],
                         data['noTelp'],
-                        data['idSeminar'],
+                        judul,
+                        data['time'],
                         e.id,
                         onDelete: () {
                           _pesanan.doc(e.id).delete();
@@ -98,7 +105,7 @@ class _PesananPageState extends State<PesananPage> {
           setState(() {
             _selectedIndex = index;
             if (_selectedIndex == 0) {
-              Navigator.pushNamed(context, '/seminar');
+              Navigator.pushNamed(context, '/homePembeli');
             } else if (_selectedIndex == 1) {
               Navigator.pushNamed(context, '/pesanan');
             } else {
@@ -113,5 +120,21 @@ class _PesananPageState extends State<PesananPage> {
         },
       ),
     );
+  }
+
+  void dataSeminar(String idSeminar) async {
+    String djudul;
+    await FirebaseFirestore.instance
+        .collection("seminar")
+        .doc(idSeminar)
+        .get()
+        .then((DocumentSnapshot ds) {
+      Map<String, dynamic> data = ds.data();
+      djudul = data["judul"];
+    });
+
+    setState(() {
+      judul = djudul;
+    });
   }
 }

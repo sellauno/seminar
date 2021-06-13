@@ -1,49 +1,57 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:seminar/card/seminar.dart';
+import 'package:seminar/card/pembeli.dart';
+import 'package:seminar/card/pesanan.dart';
+import 'package:seminar/database/databasepesanan.dart';
+import 'package:seminar/database/databaseuser.dart';
+import 'package:seminar/login/loginprosesgoogle.dart';
 
-class HomePage extends StatefulWidget {
+class PesananAdminPage extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _PesananAdminPageState createState() => _PesananAdminPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _PesananAdminPageState extends State<PesananAdminPage> {
   int count = 1;
-  int _selectedIndex = 0;
-  CollectionReference _seminar =
-      FirebaseFirestore.instance.collection('seminar');
+  int _selectedIndex = 1;
+  CollectionReference _pembeli =
+      FirebaseFirestore.instance.collection('pembeli');
+
+  List<Widget> seminarList;
 
   @override
   Widget build(BuildContext context) {
+    if (seminarList == null) {
+      seminarList = [];
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Daftar Seminar'),
-        leading: Icon(Icons.home),
-        // automaticallyImplyLeading: false,
+        title: Text('Daftar Pembeli'),
+        leading: Icon(Icons.assignment),
+        automaticallyImplyLeading: false,
       ),
       body: Column(children: [
         Expanded(
           child: ListView(
             children: [
               StreamBuilder<QuerySnapshot>(
-                stream: _seminar.snapshots(),
+                // contoh penggunaan srteam
+                // _seminar.orderBy('age', descending: true).snapshots()
+                // _seminar.where('age', isLessThan: 30).snapshots()
+                // stream: _seminar.orderBy('age', descending: true).snapshots(),
+                stream: DatabaseUser.readPembeli(),
                 builder: (buildContext, snapshot) {
-                  if(snapshot.data == null) return CircularProgressIndicator();
+                  if (snapshot.data == null) return CircularProgressIndicator();
                   return Column(
                     children: snapshot.data.docs.map((e) {
                       Map<String, dynamic> data = e.data();
-                      return SeminarCard(
-                        data['judul'],
-                        data['pembicara'],
-                        data['waktu'],
-                        data['lokasi'],
-                        data['kuota'],
-                        data['harga'],
+                      return PembeliCard(
+                        data['nama'],
+                        data['email'],
+                        data['noTelp'],
                         e.id,
-                        onTap: () {
-                          _seminar.doc(e.id).delete();
-                        },
                       );
                     }).toList(),
                   );
@@ -61,7 +69,7 @@ class _HomePageState extends State<HomePage> {
           child: FloatingActionButton(
             child: Icon(Icons.add),
             onPressed: () async {
-              Navigator.pushNamed(context, '/formseminar');
+              Navigator.pushNamed(context, '/formpesanan');
             },
           ),
         ),

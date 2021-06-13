@@ -15,7 +15,7 @@ class AkunPage extends StatefulWidget {
 class _AkunPageState extends State<AkunPage> {
   int count = 1;
   int _selectedIndex = 2;
- 
+
   String nama = "";
   String email = "";
   String noTelp = "";
@@ -25,7 +25,6 @@ class _AkunPageState extends State<AkunPage> {
     // TODO: implement initState
     super.initState();
     dataAkun();
-
   }
 
   @override
@@ -33,104 +32,81 @@ class _AkunPageState extends State<AkunPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Akun'),
+        leading: Icon(Icons.account_circle_rounded),
       ),
       body: Column(children: [
-                    Container(
-                      child: Text(nama),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(20),
-                      child: Text(email),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(20),
-                      child: Text(noTelp),
-                    ),
-                    RaisedButton(
-                      onPressed: () {
-                        if (loginwithgoogle) {
-                          signOutGoogle();
-                          setState(() {
-                            loginwithgoogle = false;
-                            role = "";
-                          });
-                        } else {
-                          signOut();
-                        }
-                        Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(builder: (context) {
-                          return LoginPage();
-                        }), ModalRoute.withName('/'));
-                      },
-                      color: Colors.deepPurple,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Sign Out',
-                          style: TextStyle(fontSize: 25, color: Colors.white),
-                        ),
-                      ),
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(40)),
-                    )
-                  ]),
-      // ListView(
-      //   children: [
-      //     StreamBuilder<QuerySnapshot>(
-      //       stream: _akun,
-      //       builder: (buildContext, snapshot) {
-      //         if (snapshot.data == null) return CircularProgressIndicator();
-
-      //         return Column(
-      //           children: snapshot.data.docs.map((e) {
-      //             Map<String, dynamic> data = e.data();
-      //             return Column(children: [
-      //               Container(
-      //                 child: Text(data["nama"]),
-      //               ),
-      //               Container(
-      //                 padding: EdgeInsets.all(20),
-      //                 child: Text(data["email"]),
-      //               ),
-      //               Container(
-      //                 padding: EdgeInsets.all(20),
-      //                 child: Text(data["noTelp"]),
-      //               ),
-      //               RaisedButton(
-      //                 onPressed: () {
-      //                   if (loginwithgoogle) {
-      //                     signOutGoogle();
-      //                     setState(() {
-      //                       loginwithgoogle = false;
-      //                     });
-      //                   } else {
-      //                     signOut();
-      //                   }
-      //                   Navigator.of(context).pushAndRemoveUntil(
-      //                       MaterialPageRoute(builder: (context) {
-      //                     return LoginPage();
-      //                   }), ModalRoute.withName('/'));
-      //                 },
-      //                 color: Colors.deepPurple,
-      //                 child: Padding(
-      //                   padding: const EdgeInsets.all(8.0),
-      //                   child: Text(
-      //                     'Sign Out',
-      //                     style: TextStyle(fontSize: 25, color: Colors.white),
-      //                   ),
-      //                 ),
-      //                 elevation: 5,
-      //                 shape: RoundedRectangleBorder(
-      //                     borderRadius: BorderRadius.circular(40)),
-      //               )
-      //             ]);
-      //           }).toList(),
-      //         );
-      //       },
-      //     ),
-      //   ],
-      // ),
+        Container(
+          padding: EdgeInsets.all(20),
+          child: Align(
+            child: Container(
+              child: Icon(
+                Icons.account_circle_rounded,
+                size: 100,
+              ),
+              width: 150,
+              height: 150,
+            ),
+            alignment: Alignment.center,
+          ),
+          height: 140,
+        ),
+        Container(
+          margin: EdgeInsets.all(10),
+          padding: EdgeInsets.all(20),
+          width: double.infinity,
+          child: Text(nama),
+          decoration: myBoxDecoration(),
+        ),
+        Container(
+          margin: EdgeInsets.all(10),
+          padding: EdgeInsets.all(20),
+          width: double.infinity,
+          child: Text(email),
+          decoration: myBoxDecoration(),
+        ),
+        Container(
+          margin: EdgeInsets.all(10),
+          padding: EdgeInsets.all(20),
+          width: double.infinity,
+          child: Text(noTelp),
+          decoration: myBoxDecoration(),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(30),
+          child: RaisedButton(
+            onPressed: () {
+              if (loginwithgoogle) {
+                signOutGoogle();
+                setState(() {
+                  loginwithgoogle = false;
+                  role = "";
+                });
+              } else {
+                signOut();
+              }
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) {
+                return LoginPage();
+              }), ModalRoute.withName('/'));
+            },
+            color: Colors.red,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                margin: EdgeInsets.all(10),
+                child: Text(
+                  'Sign Out',
+                  style: TextStyle(fontSize: 20, color: Colors.white),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            elevation: 5,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+          ),
+        )
+      ]),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -154,9 +130,17 @@ class _AkunPageState extends State<AkunPage> {
           setState(() {
             _selectedIndex = index;
             if (_selectedIndex == 0) {
-              Navigator.pushNamed(context, '/seminar');
+              if (role != "admin") {
+                Navigator.pushNamed(context, '/homePembeli');
+              } else {
+                Navigator.pushNamed(context, '/seminar');
+              }
             } else if (_selectedIndex == 1) {
-              Navigator.pushNamed(context, '/pesanan');
+              if (role != "admin") {
+                Navigator.pushNamed(context, '/pesanan');
+              } else {
+                Navigator.pushNamed(context, '/pesananadmin');
+              }
             } else {
               var user = FirebaseAuth.instance.currentUser;
               if (user != null) {
@@ -191,5 +175,15 @@ class _AkunPageState extends State<AkunPage> {
       email = demail;
       noTelp = dnoTelp;
     });
+  }
+
+  BoxDecoration myBoxDecoration() {
+    return BoxDecoration(
+      border: Border.all(
+        color: Colors.grey,
+        width: 2.0,
+      ),
+      borderRadius: BorderRadius.circular(30),
+    );
   }
 }

@@ -21,13 +21,14 @@ class EntryFormState extends State<EntryForm> {
   TextEditingController emailController = TextEditingController();
   TextEditingController notelpController = TextEditingController();
   TextEditingController totalController = TextEditingController();
-  String total;
+  int total;
+  int kuota;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Tambah'),
+          title: Text('Buat Pesanan'),
           leading: Icon(Icons.keyboard_arrow_left),
         ),
         body: Padding(
@@ -36,14 +37,14 @@ class EntryFormState extends State<EntryForm> {
             children: <Widget>[
 // nama
               Padding(
-                padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
                 child: TextField(
                   controller: namaController,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                     labelText: 'Nama',
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
+                      borderRadius: BorderRadius.circular(20.0),
                     ),
                   ),
                   onChanged: (value) {
@@ -53,14 +54,14 @@ class EntryFormState extends State<EntryForm> {
               ),
 // email
               Padding(
-                padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
                 child: TextField(
                   controller: emailController,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                     labelText: 'Email',
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
+                      borderRadius: BorderRadius.circular(20.0),
                     ),
                   ),
                   onChanged: (value) {
@@ -70,14 +71,14 @@ class EntryFormState extends State<EntryForm> {
               ),
 // No Telepon
               Padding(
-                padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
                 child: TextField(
                   controller: notelpController,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: 'No Telepon',
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
+                      borderRadius: BorderRadius.circular(20.0),
                     ),
                   ),
                   onChanged: (value) {
@@ -94,13 +95,16 @@ class EntryFormState extends State<EntryForm> {
                   } else if (snapshot.hasData || snapshot.data != null) {
                     return Padding(
                       padding:
-                          EdgeInsets.only(top: 20.0, bottom: 20.0, right: 10.0),
+                          EdgeInsets.only(top: 10.0, bottom: 10.0, right: 10.0),
                       child: DropdownButtonFormField(
                         hint: Text('Pilih Seminar yang diinginkan'),
                         items:
                             snapshot.data.docs.map((DocumentSnapshot document) {
                           Map<String, dynamic> data = document.data();
-                          total = data['harga'];
+                          
+                            total = data['harga'];
+                            kuota = data['kuota'];
+
                           return new DropdownMenuItem<String>(
                             value: document.id,
                             child: Column(
@@ -117,13 +121,13 @@ class EntryFormState extends State<EntryForm> {
                         }).toList(),
                         onChanged: (value) {
                           setState(() {
-                            idSeminarController.text = value.id;
-                            totalController.text = total;
+                            idSeminarController.text = value;
+                            totalController.text = total.toString();
                           });
                         },
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5.0),
+                            borderRadius: BorderRadius.circular(20.0),
                           ),
                         ),
                       ),
@@ -133,14 +137,14 @@ class EntryFormState extends State<EntryForm> {
               ),
 
               Padding(
-                padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
                 child: TextField(
                   controller: totalController,
                   readOnly: true,
                   decoration: InputDecoration(
                     labelText: 'Total',
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
+                      borderRadius: BorderRadius.circular(20.0),
                     ),
                   ),
                   onChanged: (value) {
@@ -156,24 +160,31 @@ class EntryFormState extends State<EntryForm> {
 // tombol simpan
                     Expanded(
                       child: RaisedButton(
-                          color: Theme.of(context).primaryColorDark,
-                          textColor: Theme.of(context).primaryColorLight,
-                          child: Text(
-                            'Save',
-                            textScaleFactor: 1.5,
-                          ),
-                          onPressed: () async {
-                            var formatter = new DateFormat('yyyy-MM-dd hh:mm');
-                            String date = formatter.format(DateTime.now());
-                            await DatabasePesanan.addPesanan(
-                              email: emailController.text,
-                              nama: namaController.text,
-                              noTelp: notelpController.text,
-                              time: date,
-                              idSeminar: idSeminarController.text,
-                            );
-                            Navigator.of(context).pop();
-                          }),
+                        color: Theme.of(context).primaryColorDark,
+                        textColor: Theme.of(context).primaryColorLight,
+                        child: Text(
+                          'Save',
+                          textScaleFactor: 1.5,
+                        ),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(40)),
+                        onPressed: () async {
+                          var formatter = new DateFormat('yyyy-MM-dd hh:mm');
+                          String date = formatter.format(DateTime.now());
+                          await DatabasePesanan.addPesanan(
+                            email: emailController.text,
+                            nama: namaController.text,
+                            noTelp: notelpController.text,
+                            time: date,
+                            idSeminar: idSeminarController.text,
+                          );
+                          await FirebaseFirestore.instance
+                              .collection('seminar')
+                              .doc(idSeminarController.text)
+                              .update({"kuota": kuota - 1});
+                          Navigator.of(context).pop();
+                        },
+                      ),
                     ),
                     Container(
                       width: 5.0,
@@ -187,6 +198,8 @@ class EntryFormState extends State<EntryForm> {
                           'Cancel',
                           textScaleFactor: 1.5,
                         ),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(40)),
                         onPressed: () {
                           Navigator.pop(context);
                         },

@@ -1,21 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class PesananCard extends StatelessWidget {
+class PembeliCard extends StatelessWidget {
   final String nama;
   final String email;
   final String noTelp;
-  final String idSeminar;
-  final String time;
   final String docId;
-  //// Pointer to Update Function
-  // final Function onUpdate;
-  //// Pointer to Delete Function
-  final Function onDelete;
 
-  PesananCard(
-      this.nama, this.email, this.noTelp, this.idSeminar, this.time, this.docId,
-      {this.onDelete});
+  PembeliCard(this.nama, this.email, this.noTelp, this.docId);
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +22,9 @@ class PesananCard extends StatelessWidget {
           email,
           style: TextStyle(fontSize: 20),
         ),
-        subtitle: Text("Nama : " +
-            nama +
-            "\nNo Telp : " +
-            noTelp +
-            "\nSeminar : " +
-            idSeminar +
-            "\n" +
-            time),
+        subtitle: Text("Nama : " + nama +
+            "\nEmail : " + email + 
+            "\nNo Telp : " + noTelp),
         onTap: () async {
           // var seminar = await navigateToEntryForm(context, this.seminarList[index]);
           // Memanggil Fungsi untuk Edit data

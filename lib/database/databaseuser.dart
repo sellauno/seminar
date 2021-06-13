@@ -48,9 +48,9 @@ class DatabaseUser {
         .catchError((e) => print(e));
   }
 
-  static Stream<QuerySnapshot> readUser() {
+  static Stream<QuerySnapshot> readPembeli() {
     CollectionReference userItemCollection =
-        FirebaseFirestore.instance.collection(role);
+        FirebaseFirestore.instance.collection("pembeli");
 
     return userItemCollection.snapshots();
   }

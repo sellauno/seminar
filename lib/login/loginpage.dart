@@ -122,10 +122,11 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              Container(
-                  width: 250,
-                  margin: EdgeInsets.only(top: 10, bottom: 15),
-                  child: _signInButton()),
+              // Container(
+              //     width: 250,
+              //     margin: EdgeInsets.only(top: 10, bottom: 15),
+              //     child: _signInButton()
+              //   ),
               _registerLink()
             ],
           ),

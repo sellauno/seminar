@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:seminar/login/loginpage.dart';
 import 'package:seminar/pages/homeadmin.dart';
+import 'package:seminar/pages/pesananadmin.dart';
 import 'form/editseminar.dart';
 import 'form/entryform.dart';
 import 'form/entryseminar.dart';
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
         '/seminar': (context) => HomePage(),
         '/login': (context) => LoginPage(),
         '/pesanan': (context) => PesananPage(),
+        '/pesananadmin': (context) => PesananAdminPage(),
         '/formseminar': (context) => EntryFormSeminar(),        
         '/formpesanan': (context) => EntryForm(),
         '/editseminar': (context) => EditFormSeminar(),

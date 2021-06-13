@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seminar/card/seminar.dart';
+import 'package:seminar/card/seminarpembeli.dart';
 
 class HomePembeli extends StatefulWidget {
   @override
@@ -18,7 +19,8 @@ class _HomePembeliState extends State<HomePembeli> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home for Pembeli'),
+        title: Text('Home'),
+        leading: Icon(Icons.home),
       ),
       body: Column(children: [
         Expanded(
@@ -35,7 +37,7 @@ class _HomePembeliState extends State<HomePembeli> {
                   return Column(
                     children: snapshot.data.docs.map((e) {
                       Map<String, dynamic> data = e.data();
-                      return SeminarCard(
+                      return SeminarPembeliCard(
                         data['judul'],
                         data['pembicara'],
                         data['waktu'],
@@ -43,9 +45,6 @@ class _HomePembeliState extends State<HomePembeli> {
                         data['kuota'],
                         data['harga'],
                         e.id,
-                        onDelete: () {
-                          _seminar.doc(e.id).delete();
-                        },
                       );
                     }).toList(),
                   );
@@ -55,24 +54,6 @@ class _HomePembeliState extends State<HomePembeli> {
                 height: 150,
               )
             ],
-          ),
-        ),
-        Container(
-          alignment: Alignment.bottomRight,
-          margin: const EdgeInsets.all(20),
-          child: FloatingActionButton(
-            child: Icon(Icons.add),
-            onPressed: () async {
-              Navigator.pushNamed(context, '/formseminar');
-              // var seminar = await navigateToEntryForm(context, null);
-              // if (seminar != null) {
-              //   //TODO 2 Panggil Fungsi untuk Insert ke DB
-              //   int result = await dbHelperSeminar.insert(seminar);
-              //   if (result > 0) {
-              //     updateListView();
-              //   }
-              // }
-            },
           ),
         ),
       ]),
@@ -99,7 +80,7 @@ class _HomePembeliState extends State<HomePembeli> {
           setState(() {
             _selectedIndex = index;
             if (_selectedIndex == 0) {
-              Navigator.pushNamed(context, '/seminar');
+              Navigator.pushNamed(context, '/homePembeli');
             } else if (_selectedIndex == 1) {
               Navigator.pushNamed(context, '/pesanan');
             } else {
@@ -109,7 +90,6 @@ class _HomePembeliState extends State<HomePembeli> {
               } else {
                 Navigator.pushNamed(context, '/login');
               }
-              
             }
           });
         },

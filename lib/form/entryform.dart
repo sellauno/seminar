@@ -3,26 +3,31 @@ import 'package:flutter/material.dart';
 import 'package:seminar/database/databasepesanan.dart';
 import 'package:seminar/database/databaseseminar.dart';
 import 'package:intl/intl.dart';
-// import 'dbhelperseminar.dart';
-// import 'seminar.dart';
-// import 'pesanan.dart';
 
 class EntryForm extends StatefulWidget {
-  // final Pesanan pesanan;
-  //EntryForm(this.pesanan);
+  final String seminar;
+  final String id;
+
+  const EntryForm(this.seminar, this.id);
+
   @override
-  EntryFormState createState() => EntryFormState(/*this.pesanan*/);
+  EntryFormState createState() => EntryFormState(this.seminar, this.id);
 }
 
 //class controller
 class EntryFormState extends State<EntryForm> {
+  final String pilSeminar;
+  final String pilId;
   TextEditingController namaController = TextEditingController();
   TextEditingController idSeminarController = TextEditingController();
+  TextEditingController idSeminarController2 = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController notelpController = TextEditingController();
   TextEditingController totalController = TextEditingController();
   int total;
   int kuota;
+
+  EntryFormState(this.pilSeminar, this.pilId);
 
   @override
   Widget build(BuildContext context) {
@@ -86,55 +91,56 @@ class EntryFormState extends State<EntryForm> {
                   },
                 ),
               ),
+              dropDown(),
 
-              StreamBuilder<QuerySnapshot>(
-                stream: DatabaseSeminar.readSeminar(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Text('Something went wrong');
-                  } else if (snapshot.hasData || snapshot.data != null) {
-                    return Padding(
-                      padding:
-                          EdgeInsets.only(top: 10.0, bottom: 10.0, right: 10.0),
-                      child: DropdownButtonFormField(
-                        hint: Text('Pilih Seminar yang diinginkan'),
-                        items:
-                            snapshot.data.docs.map((DocumentSnapshot document) {
-                          Map<String, dynamic> data = document.data();
-                          
-                            total = data['harga'];
-                            kuota = data['kuota'];
+              // StreamBuilder<QuerySnapshot>(
+              //   stream: DatabaseSeminar.readSeminar(),
+              //   builder: (context, snapshot) {
+              //     if (snapshot.hasError) {
+              //       return Text('Something went wrong');
+              //     } else if (snapshot.hasData || snapshot.data != null) {
+              //       return Padding(
+              //         padding:
+              //             EdgeInsets.only(top: 10.0, bottom: 10.0, right: 10.0),
+              //         child: DropdownButtonFormField(
+              //           hint: Text('Pilih Seminar yang diinginkan'),
+              //           items:
+              //               snapshot.data.docs.map((DocumentSnapshot document) {
+              //             Map<String, dynamic> data = document.data();
 
-                          return new DropdownMenuItem<String>(
-                            value: document.id,
-                            child: Column(
-                              children: [
-                                new Text(
-                                  data['judul'],
-                                ),
-                                // new Text(
-                                //   " (Rp "+ data['harga'].toString() +")",
-                                // ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            idSeminarController.text = value;
-                            totalController.text = total.toString();
-                          });
-                        },
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                        ),
-                      ),
-                    );
-                  }
-                },
-              ),
+              //             total = data['harga'];
+              //             kuota = data['kuota'];
+
+              //             return new DropdownMenuItem<String>(
+              //               value: document.id,
+              //               child: Column(
+              //                 children: [
+              //                   new Text(
+              //                     data['judul'],
+              //                   ),
+              //                   // new Text(
+              //                   //   " (Rp "+ data['harga'].toString() +")",
+              //                   // ),
+              //                 ],
+              //               ),
+              //             );
+              //           }).toList(),
+              //           onChanged: (value) {
+              //             setState(() {
+              //               idSeminarController.text = value;
+              //               totalController.text = total.toString();
+              //             });
+              //           },
+              //           decoration: InputDecoration(
+              //             border: OutlineInputBorder(
+              //               borderRadius: BorderRadius.circular(20.0),
+              //             ),
+              //           ),
+              //         ),
+              //       );
+              //     }
+              //   },
+              // ),
 
               Padding(
                 padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
@@ -211,5 +217,77 @@ class EntryFormState extends State<EntryForm> {
             ],
           ),
         ));
+  }
+
+  Widget dropDown() {
+    if (this.pilSeminar == null) {
+      return StreamBuilder<QuerySnapshot>(
+        stream: DatabaseSeminar.readSeminar(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('Something went wrong');
+          } else if (snapshot.hasData || snapshot.data != null) {
+            return Padding(
+              padding: EdgeInsets.only(top: 10.0, bottom: 10.0, right: 10.0),
+              child: DropdownButtonFormField(
+                hint: Text('Pilih Seminar yang diinginkan'),
+                items: snapshot.data.docs.map((DocumentSnapshot document) {
+                  Map<String, dynamic> data = document.data();
+
+                  total = data['harga'];
+                  kuota = data['kuota'];
+
+                  return new DropdownMenuItem<String>(
+                    value: document.id,
+                    child: Column(
+                      children: [
+                        new Text(
+                          data['judul'],
+                        ),
+                        // new Text(
+                        //   " (Rp "+ data['harga'].toString() +")",
+                        // ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    idSeminarController.text = value;
+                    totalController.text = total.toString();
+                  });
+                },
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
+              ),
+            );
+          }
+        },
+      );
+    } else {
+      setState(() {
+        idSeminarController2.text = pilSeminar;
+        idSeminarController.text = pilId;
+      });
+      return Padding(
+        padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+        child: TextField(
+          controller: idSeminarController2,
+          readOnly: true,
+          decoration: InputDecoration(
+            labelText: 'Seminar',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+          ),
+          onChanged: (value) {
+//
+          },
+        ),
+      );
+    }
   }
 }

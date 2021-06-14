@@ -23,6 +23,13 @@ class _HomePembeliState extends State<HomePembeli> {
         leading: Icon(Icons.home),
       ),
       body: Column(children: [
+        // Container(
+        //   padding: const EdgeInsets.all(8.0),
+        //   child: Text(
+        //     "Temukan seminar terbaik di sini!",
+        //     style: TextStyle(fontSize: 15, color: Colors.grey),
+        //   ),
+        // ),
         Expanded(
           child: ListView(
             children: [

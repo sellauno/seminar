@@ -5,6 +5,7 @@ import 'package:seminar/card/pembeli.dart';
 import 'package:seminar/card/pesanan.dart';
 import 'package:seminar/database/databasepesanan.dart';
 import 'package:seminar/database/databaseuser.dart';
+import 'package:seminar/form/entryform.dart';
 import 'package:seminar/login/loginprosesgoogle.dart';
 
 class PesananAdminPage extends StatefulWidget {
@@ -68,9 +69,11 @@ class _PesananAdminPageState extends State<PesananAdminPage> {
           margin: const EdgeInsets.all(20),
           child: FloatingActionButton(
             child: Icon(Icons.add),
-            onPressed: () async {
-              Navigator.pushNamed(context, '/formpesanan');
-            },
+            onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => EntryForm(null, null)
+                ),
+              ),
           ),
         ),
       ]),

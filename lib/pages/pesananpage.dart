@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seminar/card/pesanan.dart';
 import 'package:seminar/database/databasepesanan.dart';
+import 'package:seminar/form/entryform.dart';
 import 'package:seminar/login/loginprosesgoogle.dart';
 
 class PesananPage extends StatefulWidget {
@@ -30,7 +31,7 @@ class _PesananPageState extends State<PesananPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Daftar Pesanan'),
+        title: Text('Riwayat Pesanan'),
         leading: Icon(Icons.assignment),
         automaticallyImplyLeading: false,
       ),
@@ -77,7 +78,14 @@ class _PesananPageState extends State<PesananPage> {
           child: FloatingActionButton(
             child: Icon(Icons.add),
             onPressed: () async {
-              Navigator.pushNamed(context, '/formpesanan');
+              if (userUid != null) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (context) => EntryForm(null, null)),
+                );
+              }else{
+                Navigator.pushNamed(context, '/login');
+              }
             },
           ),
         ),

@@ -80,8 +80,12 @@ class _AkunPageState extends State<AkunPage> {
                 setState(() {
                   loginwithgoogle = false;
                   role = "";
+                  userUid = null;
                 });
               } else {
+                setState(() {
+                  userUid = null;
+                });
                 signOut();
               }
               Navigator.of(context).pushAndRemoveUntil(

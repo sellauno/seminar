@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'seminar.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
 import '../database/databaseseminar.dart';

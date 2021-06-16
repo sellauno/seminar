@@ -71,7 +71,7 @@ class _PesananAdminPageState extends State<PesananAdminPage> {
             child: Icon(Icons.add),
             onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => EntryForm(null, null)
+                  builder: (context) => EntryForm(null, null, null)
                 ),
               ),
           ),

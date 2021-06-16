@@ -7,7 +7,7 @@ final GoogleSignIn googleSignIn = GoogleSignIn();
 String name;
 String email;
 String imageUrl;
-String userUid;
+String userUid = null;
 bool loginwithgoogle = false;
 
 Future<String> signInWithGoogle() async {

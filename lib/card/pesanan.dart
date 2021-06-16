@@ -8,9 +8,6 @@ class PesananCard extends StatelessWidget {
   final String idSeminar;
   final String time;
   final String docId;
-  //// Pointer to Update Function
-  // final Function onUpdate;
-  //// Pointer to Delete Function
   final Function onDelete;
 
   PesananCard(

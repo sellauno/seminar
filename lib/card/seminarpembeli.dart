@@ -69,7 +69,7 @@ class SeminarPembeliCard extends StatelessWidget {
                   if (userUid != null) {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                          builder: (context) => EntryForm(judul, docId)),
+                          builder: (context) => EntryForm(judul, docId, harga.toString())),
                     );
                   } else {
                     Navigator.pushNamed(context, '/login');

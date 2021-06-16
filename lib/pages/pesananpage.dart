@@ -18,7 +18,8 @@ class _PesananPageState extends State<PesananPage> {
       .collection('pembeli')
       .doc(userUid)
       .collection('Pesanan');
-  String judul = "-";
+
+  String judul;
 
   @override
   void initState() {
@@ -81,9 +82,9 @@ class _PesananPageState extends State<PesananPage> {
               if (userUid != null) {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                      builder: (context) => EntryForm(null, null)),
+                      builder: (context) => EntryForm(null, null, null)),
                 );
-              }else{
+              } else {
                 Navigator.pushNamed(context, '/login');
               }
             },

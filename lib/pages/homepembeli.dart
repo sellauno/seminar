@@ -38,7 +38,7 @@ class _HomePembeliState extends State<HomePembeli> {
                 // _seminar.orderBy('age', descending: true).snapshots()
                 // _seminar.where('age', isLessThan: 30).snapshots()
                 // stream: _seminar.orderBy('age', descending: true).snapshots(),
-                stream: _seminar.snapshots(),
+                stream: _seminar.where('kuota', isGreaterThan: 0).snapshots(),
                 builder: (buildContext, snapshot) {
                   if(snapshot.data == null) return CircularProgressIndicator();
                   return Column(

@@ -1,23 +1,29 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seminar/database/databasepesanan.dart';
 import 'package:seminar/database/databaseseminar.dart';
 import 'package:intl/intl.dart';
+import 'package:seminar/login/loginprosesgoogle.dart';
+import 'package:seminar/pages/akun.dart';
 
 class EntryForm extends StatefulWidget {
   final String seminar;
   final String id;
+  final String total;
 
-  const EntryForm(this.seminar, this.id);
+  const EntryForm(this.seminar, this.id, this.total);
 
   @override
-  EntryFormState createState() => EntryFormState(this.seminar, this.id);
+  EntryFormState createState() =>
+      EntryFormState(this.seminar, this.id, this.total);
 }
 
 //class controller
 class EntryFormState extends State<EntryForm> {
   final String pilSeminar;
   final String pilId;
+  final String pilTotal;
   TextEditingController namaController = TextEditingController();
   TextEditingController idSeminarController = TextEditingController();
   TextEditingController idSeminarController2 = TextEditingController();
@@ -26,11 +32,23 @@ class EntryFormState extends State<EntryForm> {
   TextEditingController totalController = TextEditingController();
   int total;
   int kuota;
+  CollectionReference _seminar =
+      FirebaseFirestore.instance.collection('seminar');
 
-  EntryFormState(this.pilSeminar, this.pilId);
+  EntryFormState(this.pilSeminar, this.pilId, this.pilTotal);
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    dataAkun();
+  }
 
   @override
   Widget build(BuildContext context) {
+    if(pilTotal!=null){
+      totalController.text = pilTotal;
+    }
     return Scaffold(
         appBar: AppBar(
           title: Text('Buat Pesanan'),
@@ -91,56 +109,57 @@ class EntryFormState extends State<EntryForm> {
                   },
                 ),
               ),
-              dropDown(),
+              // dropDown(),
 
-              // StreamBuilder<QuerySnapshot>(
-              //   stream: DatabaseSeminar.readSeminar(),
-              //   builder: (context, snapshot) {
-              //     if (snapshot.hasError) {
-              //       return Text('Something went wrong');
-              //     } else if (snapshot.hasData || snapshot.data != null) {
-              //       return Padding(
-              //         padding:
-              //             EdgeInsets.only(top: 10.0, bottom: 10.0, right: 10.0),
-              //         child: DropdownButtonFormField(
-              //           hint: Text('Pilih Seminar yang diinginkan'),
-              //           items:
-              //               snapshot.data.docs.map((DocumentSnapshot document) {
-              //             Map<String, dynamic> data = document.data();
+              StreamBuilder<QuerySnapshot>(
+                stream: _seminar.where('kuota', isGreaterThan: 0).snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Something went wrong');
+                  } else if (snapshot.hasData || snapshot.data != null) {
+                    return Padding(
+                      padding:
+                          EdgeInsets.only(top: 10.0, bottom: 10.0, right: 10.0),
+                      child: DropdownButtonFormField(
+                        hint: Text('Pilih Seminar yang diinginkan'),
+                value: pilId,
+                        items:
+                            snapshot.data.docs.map((DocumentSnapshot document) {
+                          Map<String, dynamic> data = document.data();
 
-              //             total = data['harga'];
-              //             kuota = data['kuota'];
+                          total = data['harga'];
+                          kuota = data['kuota'];
 
-              //             return new DropdownMenuItem<String>(
-              //               value: document.id,
-              //               child: Column(
-              //                 children: [
-              //                   new Text(
-              //                     data['judul'],
-              //                   ),
-              //                   // new Text(
-              //                   //   " (Rp "+ data['harga'].toString() +")",
-              //                   // ),
-              //                 ],
-              //               ),
-              //             );
-              //           }).toList(),
-              //           onChanged: (value) {
-              //             setState(() {
-              //               idSeminarController.text = value;
-              //               totalController.text = total.toString();
-              //             });
-              //           },
-              //           decoration: InputDecoration(
-              //             border: OutlineInputBorder(
-              //               borderRadius: BorderRadius.circular(20.0),
-              //             ),
-              //           ),
-              //         ),
-              //       );
-              //     }
-              //   },
-              // ),
+                          return new DropdownMenuItem<String>(
+                            value: document.id,
+                            child: Column(
+                              children: [
+                                new Text(
+                                  data['judul'],
+                                ),
+                                // new Text(
+                                //   " (Rp "+ data['harga'].toString() +")",
+                                // ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            idSeminarController.text = value;
+                            totalController.text = total.toString();
+                          });
+                        },
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                },
+              ),
 
               Padding(
                 padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
@@ -222,7 +241,7 @@ class EntryFormState extends State<EntryForm> {
   Widget dropDown() {
     if (this.pilSeminar == null) {
       return StreamBuilder<QuerySnapshot>(
-        stream: DatabaseSeminar.readSeminar(),
+        stream: _seminar.where('kuota', isGreaterThan: 0).snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text('Something went wrong');
@@ -233,9 +252,10 @@ class EntryFormState extends State<EntryForm> {
                 hint: Text('Pilih Seminar yang diinginkan'),
                 items: snapshot.data.docs.map((DocumentSnapshot document) {
                   Map<String, dynamic> data = document.data();
-
-                  total = data['harga'];
-                  kuota = data['kuota'];
+                  setState(() {
+                    total = data['harga'];
+                    kuota = data['kuota'];
+                  });
 
                   return new DropdownMenuItem<String>(
                     value: document.id,
@@ -271,6 +291,7 @@ class EntryFormState extends State<EntryForm> {
       setState(() {
         idSeminarController2.text = pilSeminar;
         idSeminarController.text = pilId;
+        totalController.text = pilTotal;
       });
       return Padding(
         padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
@@ -289,5 +310,18 @@ class EntryFormState extends State<EntryForm> {
         ),
       );
     }
+  }
+
+  void dataAkun() async {
+    await FirebaseFirestore.instance
+        .collection('pembeli')
+        .doc(userUid)
+        .get()
+        .then((DocumentSnapshot ds) {
+      Map<String, dynamic> data = ds.data();
+      namaController.text = data["nama"];
+      emailController.text = data["email"];
+      notelpController.text = data["noTelp"];
+    });
   }
 }

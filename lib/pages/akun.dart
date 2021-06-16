@@ -7,6 +7,10 @@ import 'package:seminar/login/loginprosesemail.dart';
 import 'package:seminar/login/loginprosesgoogle.dart';
 import 'homepembeli.dart';
 
+
+  String nama = "";
+  String email = "";
+  String noTelp = "";
 class AkunPage extends StatefulWidget {
   @override
   _AkunPageState createState() => _AkunPageState();
@@ -15,10 +19,6 @@ class AkunPage extends StatefulWidget {
 class _AkunPageState extends State<AkunPage> {
   int count = 1;
   int _selectedIndex = 2;
-
-  String nama = "";
-  String email = "";
-  String noTelp = "";
 
   @override
   void initState() {

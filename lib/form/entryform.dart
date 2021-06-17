@@ -8,25 +8,24 @@ import 'package:seminar/login/loginprosesgoogle.dart';
 import 'package:seminar/pages/akun.dart';
 
 class EntryForm extends StatefulWidget {
-  final String seminar;
+  final int kuota;
   final String id;
   final String total;
 
-  const EntryForm(this.seminar, this.id, this.total);
+  const EntryForm(this.kuota, this.id, this.total);
 
   @override
   EntryFormState createState() =>
-      EntryFormState(this.seminar, this.id, this.total);
+      EntryFormState(this.kuota, this.id, this.total);
 }
 
 //class controller
 class EntryFormState extends State<EntryForm> {
-  final String pilSeminar;
+  final int pilKuota;
   final String pilId;
   final String pilTotal;
   TextEditingController namaController = TextEditingController();
   TextEditingController idSeminarController = TextEditingController();
-  TextEditingController idSeminarController2 = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController notelpController = TextEditingController();
   TextEditingController totalController = TextEditingController();
@@ -35,7 +34,7 @@ class EntryFormState extends State<EntryForm> {
   CollectionReference _seminar =
       FirebaseFirestore.instance.collection('seminar');
 
-  EntryFormState(this.pilSeminar, this.pilId, this.pilTotal);
+  EntryFormState(this.pilKuota, this.pilId, this.pilTotal);
 
   @override
   void initState() {
@@ -46,8 +45,9 @@ class EntryFormState extends State<EntryForm> {
 
   @override
   Widget build(BuildContext context) {
-    if(pilTotal!=null){
+    if (pilTotal != null) {
       totalController.text = pilTotal;
+      idSeminarController.text = pilId;
     }
     return Scaffold(
         appBar: AppBar(
@@ -122,7 +122,7 @@ class EntryFormState extends State<EntryForm> {
                           EdgeInsets.only(top: 10.0, bottom: 10.0, right: 10.0),
                       child: DropdownButtonFormField(
                         hint: Text('Pilih Seminar yang diinginkan'),
-                value: pilId,
+                        value: pilId,
                         items:
                             snapshot.data.docs.map((DocumentSnapshot document) {
                           Map<String, dynamic> data = document.data();
@@ -203,10 +203,16 @@ class EntryFormState extends State<EntryForm> {
                             time: date,
                             idSeminar: idSeminarController.text,
                           );
+                          int fixKuota;
+                          if(pilKuota !=null){
+                            fixKuota = pilKuota;
+                          }else{
+                            fixKuota = kuota;
+                          }
                           await FirebaseFirestore.instance
                               .collection('seminar')
                               .doc(idSeminarController.text)
-                              .update({"kuota": kuota - 1});
+                              .update({"kuota": fixKuota - 1});
                           Navigator.of(context).pop();
                         },
                       ),
@@ -236,80 +242,6 @@ class EntryFormState extends State<EntryForm> {
             ],
           ),
         ));
-  }
-
-  Widget dropDown() {
-    if (this.pilSeminar == null) {
-      return StreamBuilder<QuerySnapshot>(
-        stream: _seminar.where('kuota', isGreaterThan: 0).snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text('Something went wrong');
-          } else if (snapshot.hasData || snapshot.data != null) {
-            return Padding(
-              padding: EdgeInsets.only(top: 10.0, bottom: 10.0, right: 10.0),
-              child: DropdownButtonFormField(
-                hint: Text('Pilih Seminar yang diinginkan'),
-                items: snapshot.data.docs.map((DocumentSnapshot document) {
-                  Map<String, dynamic> data = document.data();
-                  setState(() {
-                    total = data['harga'];
-                    kuota = data['kuota'];
-                  });
-
-                  return new DropdownMenuItem<String>(
-                    value: document.id,
-                    child: Column(
-                      children: [
-                        new Text(
-                          data['judul'],
-                        ),
-                        // new Text(
-                        //   " (Rp "+ data['harga'].toString() +")",
-                        // ),
-                      ],
-                    ),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    idSeminarController.text = value;
-                    totalController.text = total.toString();
-                  });
-                },
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                ),
-              ),
-            );
-          }
-        },
-      );
-    } else {
-      setState(() {
-        idSeminarController2.text = pilSeminar;
-        idSeminarController.text = pilId;
-        totalController.text = pilTotal;
-      });
-      return Padding(
-        padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-        child: TextField(
-          controller: idSeminarController2,
-          readOnly: true,
-          decoration: InputDecoration(
-            labelText: 'Seminar',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-          ),
-          onChanged: (value) {
-//
-          },
-        ),
-      );
-    }
   }
 
   void dataAkun() async {

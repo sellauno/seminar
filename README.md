@@ -1,28 +1,28 @@
 # Screenshot
 
 - Login
-![screenshot](image/login.JPEG)
+![screenshot](image/login.jpeg)
 
 - Register
-![screenshot](image/register.JPEG)
+![screenshot](image/register.jpeg)
 
 - Daftar Seminar
-![screenshot](image/daftarseminar.JPEG)
+![screenshot](image/daftarseminar.jpeg)
 
 - Pesanan 
-![screenshot](image/pesananpembeli.JPEG)
+![screenshot](image/pesananpembeli.jpeg)
 
 - Daftar Pembeli
-![screenshot](image/daftarpembeli.JPEG)
+![screenshot](image/daftarpembeli.jpeg)
 
 - Form Pesanan
-![screenshot](image/formpesanan.JPEG)
+![screenshot](image/formpesanan.jpeg)
 
 - Tambah Seminar
-![screenshot](image/tambahseminar.JPEG)
+![screenshot](image/tambahseminar.jpeg)
 
 - Edit Seminar
-![screenshot](image/editseminar.JPEG)
+![screenshot](image/editseminar.jpeg)
 
 # seminar
 
